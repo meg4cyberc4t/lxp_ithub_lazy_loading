@@ -14,7 +14,7 @@ class LazyLoadingListView<T> extends StatefulWidget {
   static const scrollOffset = 50;
   final LazyLoadingRequest<T> request;
   final Widget Function(BuildContext)? onProgress;
-  final Widget Function(BuildContext, T data) itemBuilder;
+  final Widget Function(BuildContext, T data, int index) itemBuilder;
   final LazyLoadingController controller;
 
   @override
@@ -103,7 +103,7 @@ class LazyLoadingListViewState<T> extends State<LazyLoadingListView<T>> {
                     if (data.length == index && !widget.request.listIsEnded) {
                       return onProgress(context);
                     }
-                    return widget.itemBuilder(context, data[index]);
+                    return widget.itemBuilder(context, data[index], index);
                   },
                   itemCount: widget.request.listIsEnded
                       ? data.length
