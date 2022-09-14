@@ -1,0 +1,22 @@
+name: lxp_ithub_lazy_loading
+description: A new Flutter package project.
+version: 1.0.0
+homepage: https://github.com/meg4cyberc4t/lxp_ithub_lazy_loading
+
+environment:
+  sdk: '>=2.18.0 <3.0.0'
+  flutter: ">=1.17.0"
+
+dependencies:
+  dart_mappable: ^1.2.0
+  flutter:
+    sdk: flutter
+  meta: ^1.8.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+  build_runner: ^2.2.1
+  json_serializable: ^6.3.2
+  dart_mappable_builder: ^1.2.0
