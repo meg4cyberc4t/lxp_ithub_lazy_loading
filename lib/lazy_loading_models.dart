@@ -1,8 +1,9 @@
-import 'package:dart_mappable/dart_mappable.dart';
-import 'package:lxp_ithub_lazy_loading/lazy_loading_models.mapper.g.dart';
+import 'package:json_annotation/json_annotation.dart';
 
-@MappableClass()
-class LazyLoadingModel<T> with Mappable {
+part 'lazy_loading_models.g.dart';
+
+@JsonSerializable(genericArgumentFactories: true)
+class LazyLoadingModel<T> {
   const LazyLoadingModel({
     required this.data,
     required this.links,
@@ -11,10 +12,17 @@ class LazyLoadingModel<T> with Mappable {
   final List<T> data;
   final LazyLoadingModelLinks links;
   final LazyLoadingModelMeta meta;
+
+  factory LazyLoadingModel.fromJson(
+          Map<String, dynamic> json, T Function(Object? json) fromJsonT) =>
+      _$LazyLoadingModelFromJson(json, fromJsonT);
+
+  Map<String, dynamic> toJson(Object? Function(T value) toJsonT) =>
+      _$LazyLoadingModelToJson(this, toJsonT);
 }
 
-@MappableClass()
-class LazyLoadingModelLinks with Mappable {
+@JsonSerializable()
+class LazyLoadingModelLinks {
   const LazyLoadingModelLinks({
     required this.first,
     required this.last,
@@ -25,10 +33,15 @@ class LazyLoadingModelLinks with Mappable {
   final String last;
   final String? next;
   final String? prev;
+
+  factory LazyLoadingModelLinks.fromJson(Map<String, dynamic> json) =>
+      _$LazyLoadingModelLinksFromJson(json);
+
+  Map<String, dynamic> toJson() => _$LazyLoadingModelLinksToJson(this);
 }
 
-@MappableClass()
-class LazyLoadingModelMeta with Mappable {
+@JsonSerializable()
+class LazyLoadingModelMeta {
   const LazyLoadingModelMeta({
     required this.currentPage,
     required this.from,
@@ -38,14 +51,19 @@ class LazyLoadingModelMeta with Mappable {
     required this.to,
     required this.total,
   });
-  @MappableField(key: 'current_page')
+  @JsonKey(name: 'current_page')
   final int currentPage;
   final int? from;
-  @MappableField(key: 'last_page')
+  @JsonKey(name: 'last_page')
   final int lastPage;
   final String path;
-  @MappableField(key: 'per_page')
+  @JsonKey(name: 'per_page')
   final dynamic perPage;
   final int? to;
   final int total;
+
+  factory LazyLoadingModelMeta.fromJson(Map<String, dynamic> json) =>
+      _$LazyLoadingModelMetaFromJson(json);
+
+  Map<String, dynamic> toJson() => _$LazyLoadingModelMetaToJson(this);
 }
