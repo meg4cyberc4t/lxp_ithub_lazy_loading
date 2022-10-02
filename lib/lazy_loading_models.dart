@@ -19,6 +19,17 @@ class LazyLoadingModel<T> {
 
   Map<String, dynamic> toJson(Object? Function(T value) toJsonT) =>
       _$LazyLoadingModelToJson(this, toJsonT);
+
+  LazyLoadingModel<T> copyWith({
+    List<T>? data,
+    LazyLoadingModelLinks? links,
+    LazyLoadingModelMeta? meta,
+  }) =>
+      LazyLoadingModel(
+        data: data ?? this.data,
+        links: links ?? this.links,
+        meta: meta ?? this.meta,
+      );
 }
 
 @JsonSerializable()
