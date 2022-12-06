@@ -2,8 +2,10 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'lazy_loading_models.g.dart';
 
+abstract class AbstractLazyLoadingModel<T> {}
+
 @JsonSerializable(genericArgumentFactories: true)
-class LazyLoadingModel<T> {
+class LazyLoadingModel<T> implements AbstractLazyLoadingModel {
   const LazyLoadingModel({
     required this.data,
     required this.links,
@@ -80,7 +82,7 @@ class LazyLoadingModelMeta {
 }
 
 @JsonSerializable(genericArgumentFactories: true)
-class NewLazyLoadingModel<T> {
+class NewLazyLoadingModel<T> implements AbstractLazyLoadingModel {
   const NewLazyLoadingModel({
     required this.currentPage,
     required this.data,
