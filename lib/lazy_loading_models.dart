@@ -2,15 +2,26 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'lazy_loading_models.g.dart';
 
-abstract class AbstractLazyLoadingModel<T> {}
+abstract class BaseLazyLoadingModel<T> {
+  const BaseLazyLoadingModel();
+  int get currentPage;
+  List<T> get data;
+  String get path;
+  int get perPage;
+  int get total;
+  int? get from;
+  int? get to;
+  int get lastPage;
+}
 
 @JsonSerializable(genericArgumentFactories: true)
-class LazyLoadingModel<T> implements AbstractLazyLoadingModel {
+class LazyLoadingModel<T> extends BaseLazyLoadingModel {
   const LazyLoadingModel({
     required this.data,
     required this.links,
     required this.meta,
   });
+  @override
   final List<T> data;
   final LazyLoadingModelLinks links;
   final LazyLoadingModelMeta meta;
@@ -32,6 +43,27 @@ class LazyLoadingModel<T> implements AbstractLazyLoadingModel {
         links: links ?? this.links,
         meta: meta ?? this.meta,
       );
+
+  @override
+  int get currentPage => meta.currentPage;
+
+  @override
+  int? get from => meta.from;
+
+  @override
+  String get path => meta.path;
+
+  @override
+  int get perPage => meta.perPage;
+
+  @override
+  int? get to => meta.to;
+
+  @override
+  int get total => meta.total;
+
+  @override
+  int get lastPage => meta.lastPage;
 }
 
 @JsonSerializable()
@@ -82,7 +114,7 @@ class LazyLoadingModelMeta {
 }
 
 @JsonSerializable(genericArgumentFactories: true)
-class NewLazyLoadingModel<T> implements AbstractLazyLoadingModel {
+class NewLazyLoadingModel<T> extends BaseLazyLoadingModel {
   const NewLazyLoadingModel({
     required this.currentPage,
     required this.data,
@@ -97,24 +129,32 @@ class NewLazyLoadingModel<T> implements AbstractLazyLoadingModel {
     required this.to,
     required this.total,
   });
+  @override
   @JsonKey(name: 'current_page')
   final int currentPage;
+  @override
   final List<T> data;
   @JsonKey(name: 'first_page_url')
   final String firstPageUrl;
+  @override
   final int from;
+  @override
   @JsonKey(name: 'last_page')
   final int lastPage;
   @JsonKey(name: 'last_page_url')
   final String lastPageUrl;
   @JsonKey(name: 'next_page_url')
   final String? nextPageUrl;
+  @override
   final String path;
+  @override
   @JsonKey(name: 'per_page')
   final int perPage;
   @JsonKey(name: 'prev_page_url')
   final String? prevPageUrl;
+  @override
   final int total;
+  @override
   final int to;
 
   factory NewLazyLoadingModel.fromJson(
