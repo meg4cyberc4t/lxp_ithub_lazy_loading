@@ -15,7 +15,7 @@ abstract class BaseLazyLoadingModel<T> {
 }
 
 @JsonSerializable(genericArgumentFactories: true)
-class LazyLoadingModel<T> extends BaseLazyLoadingModel {
+class LazyLoadingModel<T> extends BaseLazyLoadingModel<T> {
   const LazyLoadingModel({
     required this.data,
     required this.links,
@@ -114,7 +114,7 @@ class LazyLoadingModelMeta {
 }
 
 @JsonSerializable(genericArgumentFactories: true)
-class NewLazyLoadingModel<T> extends BaseLazyLoadingModel {
+class NewLazyLoadingModel<T> extends BaseLazyLoadingModel<T> {
   const NewLazyLoadingModel({
     required this.currentPage,
     required this.data,
