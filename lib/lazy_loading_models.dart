@@ -78,3 +78,49 @@ class LazyLoadingModelMeta {
 
   Map<String, dynamic> toJson() => _$LazyLoadingModelMetaToJson(this);
 }
+
+@JsonSerializable(genericArgumentFactories: true)
+class NewLazyLoadingModel<T> {
+  const NewLazyLoadingModel({
+    required this.currentPage,
+    required this.data,
+    required this.firstPageUrl,
+    required this.from,
+    required this.lastPage,
+    required this.lastPageUrl,
+    required this.nextPageUrl,
+    required this.path,
+    required this.perPage,
+    required this.prevPageUrl,
+    required this.to,
+    required this.total,
+  });
+  @JsonKey(name: 'current_page')
+  final int currentPage;
+  final List<T> data;
+  @JsonKey(name: 'first_page_url')
+  final String firstPageUrl;
+  final int from;
+  @JsonKey(name: 'last_page')
+  final int lastPage;
+  @JsonKey(name: 'last_page_url')
+  final String lastPageUrl;
+  @JsonKey(name: 'next_page_url')
+  final String? nextPageUrl;
+  final String path;
+  @JsonKey(name: 'per_page')
+  final int perPage;
+  @JsonKey(name: 'prev_page_url')
+  final String? prevPageUrl;
+  final int total;
+  final int to;
+
+  factory NewLazyLoadingModel.fromJson(
+    Map<String, dynamic> json,
+    T Function(Object? obj) fromJsonT,
+  ) =>
+      _$NewLazyLoadingModelFromJson<T>(json, fromJsonT);
+
+  Map<String, dynamic> toJson(T Function(Object? json) fromJsonT) =>
+      _$NewLazyLoadingModelToJson(this, fromJsonT);
+}
