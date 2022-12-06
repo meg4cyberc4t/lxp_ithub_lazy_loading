@@ -3,6 +3,8 @@ library lxp_ithub_lazy_loading;
 import 'package:flutter/foundation.dart';
 import 'package:lxp_ithub_lazy_loading/lazy_loading_models.dart';
 
+export 'package:lxp_ithub_lazy_loading/lazy_loading_models.dart';
+
 class LazyLoadingRequest<T> {
   LazyLoadingRequest(this.loadingDataFromPage);
   final Future<LazyLoadingModel<T>> Function(int page) loadingDataFromPage;
