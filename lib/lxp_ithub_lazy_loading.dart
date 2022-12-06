@@ -28,8 +28,9 @@ class LazyLoadingRequest<T> {
       );
       listIsEnded = meta?.currentPage == meta?.lastPage;
       return model.data as List<T>;
-    } catch (e) {
+    } catch (e, s) {
       debugPrint(e.toString());
+      debugPrintStack(stackTrace: s);
       return <T>[];
     }
   }
