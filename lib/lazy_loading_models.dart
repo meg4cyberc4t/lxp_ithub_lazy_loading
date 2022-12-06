@@ -137,7 +137,7 @@ class NewLazyLoadingModel<T> extends BaseLazyLoadingModel<T> {
   @JsonKey(name: 'first_page_url')
   final String firstPageUrl;
   @override
-  final int from;
+  final int? from;
   @override
   @JsonKey(name: 'last_page')
   final int lastPage;
@@ -155,7 +155,7 @@ class NewLazyLoadingModel<T> extends BaseLazyLoadingModel<T> {
   @override
   final int total;
   @override
-  final int to;
+  final int? to;
 
   factory NewLazyLoadingModel.fromJson(
     Map<String, dynamic> json,
