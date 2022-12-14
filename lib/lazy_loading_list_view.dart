@@ -115,10 +115,17 @@ class LazyLoadingListViewState<T> extends State<LazyLoadingListView<T>> {
                     if (index == 0 && widget.header != null) {
                       return widget.header!;
                     }
+                    int currentDataIndex = index;
+                    if (widget.header != null) {
+                      currentDataIndex--;
+                    }
+                    if (!widget.request.listIsEnded) {
+                      currentDataIndex--;
+                    }
                     return widget.itemBuilder(
                       context,
-                      widget.header != null ? data[index - 1] : data[index],
-                      widget.header != null ? index - 1 : index,
+                      data[currentDataIndex],
+                      currentDataIndex,
                     );
                   },
                   itemCount: dataLength,
