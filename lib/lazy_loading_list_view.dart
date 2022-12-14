@@ -120,10 +120,16 @@ class LazyLoadingListViewState<T> extends State<LazyLoadingListView<T>> {
                     ),
                     SliverList(
                       delegate: SliverChildBuilderDelegate(
-                        (context, index) => widget.itemBuilder(
-                          context,
-                          data[index],
-                          index,
+                        (context, index) => Padding(
+                          padding: EdgeInsets.only(
+                            left: padding.left,
+                            right: padding.right,
+                          ),
+                          child: widget.itemBuilder(
+                            context,
+                            data[index],
+                            index,
+                          ),
                         ),
                         childCount: data.length,
                       ),
@@ -137,7 +143,10 @@ class LazyLoadingListViewState<T> extends State<LazyLoadingListView<T>> {
                           ),
                           child: onProgress(context),
                         ),
-                      )
+                      ),
+                    SliverToBoxAdapter(
+                      child: SizedBox(height: padding.bottom),
+                    ),
                   ],
                 ),
               );
