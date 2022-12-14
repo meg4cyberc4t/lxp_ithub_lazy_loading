@@ -7,6 +7,7 @@ class LazyLoadingListView<T> extends StatefulWidget {
     required this.request,
     required this.itemBuilder,
     required this.controller,
+    this.header,
     this.onProgress,
     Key? key,
   }) : super(key: key);
@@ -16,6 +17,7 @@ class LazyLoadingListView<T> extends StatefulWidget {
   final Widget Function(BuildContext)? onProgress;
   final Widget Function(BuildContext, T data, int index) itemBuilder;
   final LazyLoadingController controller;
+  final Widget? header;
 
   @override
   State<LazyLoadingListView> createState() => LazyLoadingListViewState<T>();
@@ -90,6 +92,13 @@ class LazyLoadingListViewState<T> extends State<LazyLoadingListView<T>> {
         return ValueListenableBuilder(
             valueListenable: data,
             builder: (context, List<T> data, _) {
+              int dataLength = data.length;
+              if (widget.request.listIsEnded) {
+                dataLength++;
+              }
+              if (widget.header != null) {
+                dataLength++;
+              }
               return NotificationListener<ScrollNotification>(
                 onNotification: onNotification,
                 child: ListView.builder(
@@ -100,14 +109,24 @@ class LazyLoadingListViewState<T> extends State<LazyLoadingListView<T>> {
                     parent: AlwaysScrollableScrollPhysics(),
                   ),
                   itemBuilder: (context, index) {
-                    if (data.length == index && !widget.request.listIsEnded) {
-                      return onProgress(context);
+                    if (widget.header != null) {
+                      if (data.length == index - 1 &&
+                          !widget.request.listIsEnded) {
+                        return onProgress(context);
+                      }
+                      if (index == 0) {
+                        return widget.header!;
+                      }
+                      return widget.itemBuilder(
+                          context, data[index], index - 1);
+                    } else {
+                      if (data.length == index && !widget.request.listIsEnded) {
+                        return onProgress(context);
+                      }
+                      return widget.itemBuilder(context, data[index], index);
                     }
-                    return widget.itemBuilder(context, data[index], index);
                   },
-                  itemCount: widget.request.listIsEnded
-                      ? data.length
-                      : data.length + 1,
+                  itemCount: dataLength,
                 ),
               );
             });
