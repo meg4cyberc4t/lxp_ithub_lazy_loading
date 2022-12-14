@@ -109,22 +109,17 @@ class LazyLoadingListViewState<T> extends State<LazyLoadingListView<T>> {
                     parent: AlwaysScrollableScrollPhysics(),
                   ),
                   itemBuilder: (context, index) {
-                    if (widget.header != null) {
-                      if (data.length == index - 1 &&
-                          !widget.request.listIsEnded) {
-                        return onProgress(context);
-                      }
-                      if (index == 0) {
-                        return widget.header!;
-                      }
-                      return widget.itemBuilder(
-                          context, data[index], index - 1);
-                    } else {
-                      if (data.length == index && !widget.request.listIsEnded) {
-                        return onProgress(context);
-                      }
-                      return widget.itemBuilder(context, data[index], index);
+                    if (dataLength == index && !widget.request.listIsEnded) {
+                      return onProgress(context);
                     }
+                    if (index == 0 && widget.header != null) {
+                      return widget.header!;
+                    }
+                    return widget.itemBuilder(
+                      context,
+                      widget.header != null ? data[index + 1] : data[index],
+                      index,
+                    );
                   },
                   itemCount: dataLength,
                 ),
