@@ -93,7 +93,7 @@ class LazyLoadingListViewState<T> extends State<LazyLoadingListView<T>> {
             valueListenable: data,
             builder: (context, List<T> data, _) {
               int dataLength = data.length;
-              if (widget.request.listIsEnded) {
+              if (!widget.request.listIsEnded) {
                 dataLength++;
               }
               if (widget.header != null) {
@@ -117,8 +117,8 @@ class LazyLoadingListViewState<T> extends State<LazyLoadingListView<T>> {
                     }
                     return widget.itemBuilder(
                       context,
-                      widget.header != null ? data[index + 1] : data[index],
-                      index,
+                      widget.header != null ? data[index - 1] : data[index],
+                      widget.header != null ? index - 1 : index,
                     );
                   },
                   itemCount: dataLength,
