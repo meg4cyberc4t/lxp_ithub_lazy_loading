@@ -9,6 +9,7 @@ class LazyLoadingListView<T> extends StatefulWidget {
     required this.controller,
     this.header,
     this.onProgress,
+    this.padding,
     Key? key,
   }) : super(key: key);
 
@@ -18,6 +19,7 @@ class LazyLoadingListView<T> extends StatefulWidget {
   final Widget Function(BuildContext, T data, int index) itemBuilder;
   final LazyLoadingController controller;
   final Widget? header;
+  final EdgeInsets? padding;
 
   @override
   State<LazyLoadingListView> createState() => LazyLoadingListViewState<T>();
@@ -78,6 +80,9 @@ class LazyLoadingListViewState<T> extends State<LazyLoadingListView<T>> {
 
   @override
   Widget build(BuildContext context) {
+    final EdgeInsets padding = widget.padding ??
+        EdgeInsets.only(
+            left: 4, right: 4, bottom: MediaQuery.of(context).padding.bottom);
     return FutureBuilder(
       future:
           widget.request.loadingNextData().then((value) => data.value = value),
@@ -92,43 +97,48 @@ class LazyLoadingListViewState<T> extends State<LazyLoadingListView<T>> {
         return ValueListenableBuilder(
             valueListenable: data,
             builder: (context, List<T> data, _) {
-              int dataLength = data.length;
-              if (!widget.request.listIsEnded) {
-                dataLength++;
-              }
-              if (widget.header != null) {
-                dataLength++;
-              }
               return NotificationListener<ScrollNotification>(
                 onNotification: onNotification,
-                child: ListView.builder(
-                  padding: const EdgeInsets.symmetric(vertical: 4).add(
-                      EdgeInsets.only(
-                          bottom: MediaQuery.of(context).padding.bottom)),
+                child: CustomScrollView(
                   physics: const BouncingScrollPhysics(
                     parent: AlwaysScrollableScrollPhysics(),
                   ),
-                  itemBuilder: (context, index) {
-                    if (dataLength == index && !widget.request.listIsEnded) {
-                      return onProgress(context);
-                    }
-                    if (index == 0 && widget.header != null) {
-                      return widget.header!;
-                    }
-                    int currentDataIndex = index;
-                    if (widget.header != null) {
-                      currentDataIndex--;
-                    }
-                    if (!widget.request.listIsEnded) {
-                      currentDataIndex--;
-                    }
-                    return widget.itemBuilder(
-                      context,
-                      data[currentDataIndex],
-                      currentDataIndex,
-                    );
-                  },
-                  itemCount: dataLength,
+                  slivers: [
+                    SliverToBoxAdapter(
+                      child: SizedBox(
+                        height: padding.top,
+                      ),
+                    ),
+                    SliverToBoxAdapter(
+                      child: Padding(
+                        padding: EdgeInsets.only(
+                          left: padding.left,
+                          right: padding.right,
+                        ),
+                        child: widget.header,
+                      ),
+                    ),
+                    SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                        (context, index) => widget.itemBuilder(
+                          context,
+                          data[index],
+                          index,
+                        ),
+                        childCount: data.length,
+                      ),
+                    ),
+                    if (!widget.request.listIsEnded)
+                      SliverToBoxAdapter(
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                            left: padding.left,
+                            right: padding.right,
+                          ),
+                          child: onProgress(context),
+                        ),
+                      )
+                  ],
                 ),
               );
             });
